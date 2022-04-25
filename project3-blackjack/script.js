@@ -52,7 +52,7 @@ standButton.style.display = `none`;
 /*================================================*/
 //https://c.tenor.com/wIxFiobxxbIAAAAd/john-jonah-jameson-lol.gif
 
-var atLeastYouTriedImg = `<img src="https://c.tenor.com/q9_zZ9BgOYEAAAAC/bart-the-simpsons.gif"/>`;
+var triedYourBestImg = `<img src="https://c.tenor.com/eofFOQr4ycoAAAAC/try-so-hard-but-you-dont-succeed-fail.gif"/>`;
 
 var cryImg = `<img src="https://c.tenor.com/qm6ErRtDZfUAAAAd/ouin-pleur.gif"/>`;
 
@@ -81,6 +81,10 @@ var facePalmImg = `<img src = "https://c.tenor.com/8JC0Q8897jwAAAAd/facepalm-pic
 var phewImg = `<img src = "https://c.tenor.com/0kwCaACwAUwAAAAC/dwight-the-office.gif"/>`;
 
 var selfDestructImg = `<img src = "https://c.tenor.com/SzfO_CqZSRwAAAAC/chicken-chicken-bro.gif"/>`;
+
+var whiteFlagImg = `<img src = "https://c.tenor.com/85IVfl04Z8UAAAAd/tom-and-jerry-waving-white-flag.gif"/>`;
+
+var bigBallsImg = `<img src = "https://c.tenor.com/VKsXSVwgvokAAAAC/domletty.gif"/>`;
 /*================================================*/
 /*=============== HELPER FUNCTIONS ===============*/
 /*================================================*/
@@ -424,7 +428,7 @@ var main = function (input) {
     // If no Blackjack, game continues
     // Progress the gameMode
     currentGameMode = GAME_HIT_OR_STAND;
-    outputMessage = `You bet $${currentRoundPlayerBet}.<br><br> Heads up! Input "hit", "stand" or "double down"! Clock's ticking.. <br><br>${displayPlayerAndDealerHands(
+    outputMessage = `You bet $${currentRoundPlayerBet}.<br><br> Heads up! Input "hit", "stand", "surrender" or "double down"! Clock's ticking.. <br><br>${displayPlayerAndDealerHands(
       playerHand,
       dealerHand,
       true
@@ -438,8 +442,13 @@ var main = function (input) {
   if (currentGameMode === GAME_HIT_OR_STAND) {
     console.log(`The current game mode is`, currentGameMode);
 
-    if (input !== "hit" && input !== "stand" && input !== "double down") {
-      return `Please input "hit", "stand", or "double down" to play the game <br><br>${displayChipCountInfo(
+    if (
+      input !== "hit" &&
+      input !== "stand" &&
+      input !== "double down" &&
+      input !== "surrender"
+    ) {
+      return `Please input "hit", "stand", "surrender" or "double down" to play the game <br><br>${displayChipCountInfo(
         playerChipCount
       )}<br>----------<br> ${displayPlayerAndDealerHands(
         playerHand,
@@ -449,11 +458,29 @@ var main = function (input) {
     }
     console.log(`control flow: game state === GAME_HIT_OR_STAND`);
 
-    // If Player Hit
+    // If Player Surrenders
+    if (input === `surrender`) {
+      playerChipCount += 0.5 * currentRoundPlayerBet;
+
+      outputMessage = `You waved the white flag. Let's see if you made the right decision. <br><br> ${displayChipCountInfo(
+        playerChipCount
+      )}<br><br>${displayPlayerAndDealerHands(
+        playerHand,
+        dealerHand,
+        false
+      )} <br><br>
+      Please place your bets to start the next round.<br><br> ${whiteFlagImg}`;
+      resetBJ();
+      return outputMessage;
+    }
+
+    // If Player double down after hitting,
 
     if (playerHand.length > 2 && input === `double down`) {
       return `It's too late to double down. Please input "hit" or "stand" to play.`;
     }
+
+    // If Player Hits
 
     if (input === `hit`) {
       playerHand.push(gameDeck.pop());
@@ -533,7 +560,7 @@ var main = function (input) {
         playerChipCount += 2 * currentRoundPlayerBet;
         console.log(`the current player chip count is`, playerChipCount);
         console.log(`player bets`, currentRoundPlayerBet);
-        outputMessage = `🎉 You Won $${
+        outputMessage = `🎉 You went big and won big! You Won $${
           2 * currentRoundPlayerBet
         }! 🎉 <br><br> Dealer got too greedy and went bust. <br><br> ${displayChipCountInfo(
           playerChipCount
@@ -541,7 +568,7 @@ var main = function (input) {
           playerHand,
           dealerHand,
           false
-        )} <br><br> ${phewImg}`;
+        )} <br><br> ${bigBallsImg}`;
 
         resetBJ();
 
@@ -576,7 +603,7 @@ var main = function (input) {
           playerChipCount
         );
         console.log(`Player wins, player's bet was `, currentRoundPlayerBet);
-        outputMessage = `🎉 You won $${
+        outputMessage = `🎉 Congratulations!! You won! ${
           2 * currentRoundPlayerBet
         }! 🎉 <br><br> ${displayChipCountInfo(
           playerChipCount
@@ -606,7 +633,7 @@ var main = function (input) {
         )} <br><br> ${displayHandTotalValues(
           playerHandTotalValue,
           dealerHandTotalValue
-        )}<br><br> ${atLeastYouTriedImg}`;
+        )}<br><br> ${triedYourBestImg}`;
 
         resetBJ();
         return outputMessage;
