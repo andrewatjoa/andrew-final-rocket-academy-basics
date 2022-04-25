@@ -30,6 +30,7 @@ var dealerHand = [];
 var playerChipCount = 100;
 var currentRoundPlayerBet = 0;
 var outputMessage = ``;
+var splitPlayerHand = [];
 
 // Keep Score
 var playerHandTotalValue = ``;
@@ -49,8 +50,9 @@ standButton.style.display = `none`;
 /*================================================*/
 /*================== GAME IMAGES =================*/
 /*================================================*/
+//https://c.tenor.com/wIxFiobxxbIAAAAd/john-jonah-jameson-lol.gif
 
-var laughImg = `<img src="https://c.tenor.com/wIxFiobxxbIAAAAd/john-jonah-jameson-lol.gif"/>`;
+var atLeastYouTriedImg = `<img src="https://c.tenor.com/q9_zZ9BgOYEAAAAC/bart-the-simpsons.gif"/>`;
 
 var cryImg = `<img src="https://c.tenor.com/qm6ErRtDZfUAAAAd/ouin-pleur.gif"/>`;
 
@@ -64,8 +66,6 @@ var prayingImg = `<img src = "https://c.tenor.com/B25um8RTgfIAAAAC/nervous-sign-
 
 var hitItImg = `<img src = "https://c.tenor.com/PM9CNDYZenMAAAAC/hit-it-dj-music-on.gif"/>`;
 
-var grandmaImg = `<img src = "https://c.tenor.com/yPotMfbcZXYAAAAC/not-hungry-grandma.gif"/>`;
-
 var doItImg = `<img src = "https://c.tenor.com/bXAKEBgc_D0AAAAC/do-it-what-are-you-waiting-for.gif"/>`;
 
 var nodImg = `<img src = "https://c.tenor.com/-kHJ5bxUwisAAAAd/smile-nod.gif">`;
@@ -74,11 +74,11 @@ var danceImg = `<img src = "https://c.tenor.com/39bRj_CKtFUAAAAC/whoop-dance.gif
 
 var bondImg = `<img src = "https://c.tenor.com/Yw7STJhV-JgAAAAd/daniel-craig-james-bond.gif"/>`;
 
-var chipsPlayingImg = `<img src = "https://c.tenor.com/vl4uk8RxoYIAAAAC/poker-pokerchip.gif"/>`;
+var handShakeImg = `<img src = "https://c.tenor.com/ytbz1Epg7Q8AAAAC/predator-arnold.gif"/>`;
 
 var facePalmImg = `<img src = "https://c.tenor.com/8JC0Q8897jwAAAAd/facepalm-picard.gif"/>`;
 
-var phewImg = `<img src = "https://c.tenor.com/g_d3iHyzc68AAAAd/hammaya-relaxed.gif"/>`;
+var phewImg = `<img src = "https://c.tenor.com/0kwCaACwAUwAAAAC/dwight-the-office.gif"/>`;
 
 var selfDestructImg = `<img src = "https://c.tenor.com/SzfO_CqZSRwAAAAC/chicken-chicken-bro.gif"/>`;
 /*================================================*/
@@ -227,14 +227,23 @@ var calculateTotalHandValue = function (handArray) {
 
 // Function that displays the player and dealer hands in a message
 
-var displayPlayerAndDealerHands = function (playerHandArray, dealerHandArray) {
+var displayPlayerAndDealerHands = function (
+  playerHandArray,
+  dealerHandArray,
+  hideOneCard
+) {
   //player hand
   var playerMessage = `Player's Hand: <br>`;
   for (var i = 0; i < playerHandArray.length; i += 1) {
     playerMessage += `${playerHandArray[i].name} of ${playerHandArray[i].suitEmoji} | `;
   }
+  var hidden = 0;
+  if (hideOneCard === true) {
+    hidden = 1;
+  }
+
   var dealerMessage = `Dealer's Hand: <br>`;
-  for (var j = 0; j < dealerHandArray.length; j += 1) {
+  for (var j = hidden; j < dealerHandArray.length; j += 1) {
     dealerMessage += `${dealerHandArray[j].name} of ${dealerHandArray[j].suitEmoji} | `;
   }
   return `${playerMessage} <br><br> ${dealerMessage}`;
@@ -248,7 +257,7 @@ var displayHandTotalValues = function (playerHandValue, dealerHandValue) {
 
 var displayGameInstructions = function (playerHandValue) {
   if (playerHandValue < 11) {
-    return `You have less than 11. Even my grandmother knows that you should  hit. <br><br> ${grandmaImg}`;
+    return `You have less than 11. Even my grandmother knows that you should  hit. <br><br> ${doItImg}`;
   } else if (playerHandValue === 11) {
     return `Wow! I would double down if I can!!<br><br> ${doItImg}`;
   } else if (playerHandValue === 12) {
@@ -288,35 +297,35 @@ var resetBJ = function () {
 };
 
 /*============ EVENT LISTENERS==============*/
-hitButton.addEventListener("click", function () {
-  console.log(`The hit button is working`);
-  playerHand.push(gameDeck.pop());
-  console.log(`the current player cards are`, playerHand);
-  // Calculate the total hand value of both player and dealer
-  playerHandTotalValue = calculateTotalHandValue(playerHand);
-  dealerHandTotalValue = calculateTotalHandValue(dealerHand);
-  console.log(`player's total hand value is `, playerHandTotalValue);
-  outputMessage = `${displayPlayerAndDealerHands(
-    playerHand,
-    dealerHand
-  )} <br><br> You drew another card. <br><br> ${displayHandTotalValues(
-    playerHandTotalValue,
-    dealerHandTotalValue
-  )} <br><br> Please type "hit" to hit or "stand" to stand. <br><br> ${displayGameInstructions(
-    playerHandTotalValue
-  )}`;
+// hitButton.addEventListener("click", function () {
+//   console.log(`The hit button is working`);
+//   playerHand.push(gameDeck.pop());
+//   console.log(`the current player cards are`, playerHand);
+//   // Calculate the total hand value of both player and dealer
+//   playerHandTotalValue = calculateTotalHandValue(playerHand);
+//   dealerHandTotalValue = calculateTotalHandValue(dealerHand);
+//   console.log(`player's total hand value is `, playerHandTotalValue);
+//   outputMessage = `${displayPlayerAndDealerHands(
+//     playerHand,
+//     dealerHand
+//   )} <br><br> You drew another card. <br><br> ${displayHandTotalValues(
+//     playerHandTotalValue,
+//     dealerHandTotalValue
+//   )} <br><br> Please type "hit" to hit or "stand" to stand. <br><br> ${displayGameInstructions(
+//     playerHandTotalValue
+//   )}`;
 
-  // Check if player bust
-  var playerBust = checkForBust(playerHandTotalValue);
-  if (playerBust === true) {
-    outputMessage = `🔥 Oops! You went bust!🔥 <br><br> ${displayChipCountInfo(
-      playerChipCount
-    )}<br><br> It's okay, this is just a game of cards afterall. It's not your life or mine. Please place your bets to continue playing.<br><br>${selfDestructImg}`;
-    resetBJ();
-    return main();
-  }
-  return main();
-});
+//   // Check if player bust
+//   var playerBust = checkForBust(playerHandTotalValue);
+//   if (playerBust === true) {
+//     outputMessage = `🔥 Oops! You went bust!🔥 <br><br> ${displayChipCountInfo(
+//       playerChipCount
+//     )}<br><br> It's okay, this is just a game of cards afterall. It's not your life or mine. Please place your bets to continue playing.<br><br>${selfDestructImg}`;
+//     resetBJ();
+//     return main();
+//   }
+//   return main();
+// });
 
 /*==============================================*/
 /*=============== MAIN FUNCTIONS ===============*/
@@ -329,7 +338,7 @@ var main = function (input) {
       return `Please place your bets by entering a numerical number! <br><br> You have $${playerChipCount} to play with, enter the amount you wish to bet.${bondImg}`;
     }
     if (currentRoundPlayerBet > playerChipCount) {
-      return `You don't have enough money to bet. (Please don't borrow from your friends or loan sharks) <br><br> ${cryImg}`;
+      return `You're betting $${currentRoundPlayerBet} when you only have $${playerChipCount}. You don't have enough money to bet. Please call 1800 668 8668 if you have the urge to borrow from your friend (and please don't take your child's piggybank) <br><br> ${cryImg}`;
     }
     if (isNaN(currentRoundPlayerBet)) {
       return `Please enter a numeric number to place your bets. <br><br>${facePalmImg}`;
@@ -392,7 +401,8 @@ var main = function (input) {
         playerChipCount
       )} <br><br> Please place your bets to continue playing!<br><br>${displayPlayerAndDealerHands(
         playerHand,
-        dealerHand
+        dealerHand,
+        false
       )}<br><br>${moneyAngelImg}`;
       resetBJ();
       return outputMessage;
@@ -404,8 +414,9 @@ var main = function (input) {
         playerChipCount
       )}<br><br>Please place your bets to continue playing!<br><br>${displayPlayerAndDealerHands(
         playerHand,
-        dealerHand
-      )} ${kThxByeImg}`;
+        dealerHand,
+        false
+      )}<br><br>${kThxByeImg}`;
       resetBJ();
       return outputMessage;
     }
@@ -413,13 +424,13 @@ var main = function (input) {
     // If no Blackjack, game continues
     // Progress the gameMode
     currentGameMode = GAME_HIT_OR_STAND;
-    outputMessage = `You bet $${currentRoundPlayerBet}.<br> Heads up! <br><br>${displayPlayerAndDealerHands(
+    outputMessage = `You bet $${currentRoundPlayerBet}.<br><br> Heads up! Input "hit", "stand" or "double down"! Clock's ticking.. <br><br>${displayPlayerAndDealerHands(
       playerHand,
-      dealerHand
-    )} <br><br> ${displayHandTotalValues(
-      playerHandTotalValue,
-      dealerHandTotalValue
-    )}<br><br> ${displayGameInstructions(playerHandTotalValue)}`;
+      dealerHand,
+      true
+    )} <br><br> Your current hand value is ${playerHandTotalValue} <br><br> ${displayGameInstructions(
+      playerHandTotalValue
+    )}`;
 
     return outputMessage;
   }
@@ -427,33 +438,35 @@ var main = function (input) {
   if (currentGameMode === GAME_HIT_OR_STAND) {
     console.log(`The current game mode is`, currentGameMode);
 
-    if (input !== "hit" && input !== "stand") {
-      return `Please input "hit" or "stand" to play the game <br><br>${displayChipCountInfo(
+    if (input !== "hit" && input !== "stand" && input !== "double down") {
+      return `Please input "hit", "stand", or "double down" to play the game <br><br>${displayChipCountInfo(
         playerChipCount
       )}<br>----------<br> ${displayPlayerAndDealerHands(
         playerHand,
-        dealerHand
-      )} <br><br> ${displayHandTotalValues(
-        playerHandTotalValue,
-        dealerHandTotalValue
+        dealerHand,
+        true
       )}`;
     }
     console.log(`control flow: game state === GAME_HIT_OR_STAND`);
 
     // If Player Hit
+
+    if (playerHand.length > 2 && input === `double down`) {
+      return `It's too late to double down. Please input "hit" or "stand" to play.`;
+    }
+
     if (input === `hit`) {
       playerHand.push(gameDeck.pop());
+
       console.log(`the current player cards are`, playerHand);
       // Calculate the total hand value of both player and dealer
       playerHandTotalValue = calculateTotalHandValue(playerHand);
       dealerHandTotalValue = calculateTotalHandValue(dealerHand);
       outputMessage = `${displayPlayerAndDealerHands(
         playerHand,
-        dealerHand
-      )} <br><br> You drew another card. <br><br> ${displayHandTotalValues(
-        playerHandTotalValue,
-        dealerHandTotalValue
-      )} <br><br> Please type "hit" to hit or "stand" to stand. <br><br> ${displayGameInstructions(
+        dealerHand,
+        true
+      )} <br><br> You drew another card. <br><br> Your current hand value is ${playerHandTotalValue}<br><br>  Please type "hit" to hit or "stand" to stand. <br><br> ${displayGameInstructions(
         playerHandTotalValue
       )}`;
 
@@ -462,7 +475,11 @@ var main = function (input) {
       if (playerBust === true) {
         outputMessage = `🔥 Oops! You went bust!🔥 <br><br> ${displayChipCountInfo(
           playerChipCount
-        )}<br><br> It's okay, this is just a game of cards afterall. It's not your life or mine. Please place your bets to continue playing.<br><br>${selfDestructImg}`;
+        )}<br><br>${displayPlayerAndDealerHands(
+          playerHand,
+          dealerHand,
+          false
+        )}<br><br> Please place your bets to start the next round.<br><br> ${selfDestructImg}`;
         resetBJ();
         return outputMessage;
       }
@@ -483,20 +500,54 @@ var main = function (input) {
         playerChipCount += 2 * currentRoundPlayerBet;
         console.log(`the current player chip count is`, playerChipCount);
         console.log(`player bets`, currentRoundPlayerBet);
-        outputMessage = `You Win! Dealer got too greedy and went bust. <br><br> ${displayChipCountInfo(
+        outputMessage = `🎉 You Won $${
+          2 * currentRoundPlayerBet
+        }! 🎉<br> Dealer got too greedy and went bust. <br><br> ${displayChipCountInfo(
           playerChipCount
         )}<br><br>Please place your bets to play again.<br><br>----------<br> ${displayPlayerAndDealerHands(
           playerHand,
-          dealerHand
-        )} <br><br> ${displayHandTotalValues(
-          playerHandTotalValue,
-          dealerHandTotalValue
-        )}<br><br>${phewImg}`;
+          dealerHand,
+          false
+        )} <br><br> ${phewImg}`;
 
         resetBJ();
 
         return outputMessage;
       }
+    } else if (input === `double down`) {
+      playerHand.push(gameDeck.pop());
+      playerChipCount = playerChipCount - currentRoundPlayerBet;
+      currentRoundPlayerBet = 2 * currentRoundPlayerBet;
+
+      playerHandTotalValue = calculateTotalHandValue(playerHand);
+      dealerHandTotalValue = calculateTotalHandValue(dealerHand);
+
+      while (dealerHandTotalValue < 17) {
+        dealerHand.push(gameDeck.pop());
+        dealerHandTotalValue = calculateTotalHandValue(dealerHand);
+      }
+
+      dealerBust = checkForBust(dealerHandTotalValue);
+
+      if (dealerBust === true) {
+        playerChipCount += 2 * currentRoundPlayerBet;
+        console.log(`the current player chip count is`, playerChipCount);
+        console.log(`player bets`, currentRoundPlayerBet);
+        outputMessage = `🎉 You Won $${
+          2 * currentRoundPlayerBet
+        }! 🎉 <br><br> Dealer got too greedy and went bust. <br><br> ${displayChipCountInfo(
+          playerChipCount
+        )}<br><br>Please place your bets to play again.<br><br>----------<br> ${displayPlayerAndDealerHands(
+          playerHand,
+          dealerHand,
+          false
+        )} <br><br> ${phewImg}`;
+
+        resetBJ();
+
+        return outputMessage;
+      }
+      currentGameMode = GAME_RESULTS_SHOWN;
     }
     if (currentGameMode === GAME_RESULTS_SHOWN) {
       console.log(`control flow: the current game mode === GAME_RESULTS_SHOWN`);
@@ -508,11 +559,12 @@ var main = function (input) {
           playerChipCount
         )}<br><br>Please place your bets to play again.<br><br>----------<br><br>${displayPlayerAndDealerHands(
           playerHand,
-          dealerHand
+          dealerHand,
+          false
         )} <br><br> ${displayHandTotalValues(
           playerHandTotalValue,
           dealerHandTotalValue
-        )}`;
+        )} <br><br> ${handShakeImg}`;
         resetBJ();
         return outputMessage;
       }
@@ -524,15 +576,18 @@ var main = function (input) {
           playerChipCount
         );
         console.log(`Player wins, player's bet was `, currentRoundPlayerBet);
-        outputMessage = `You win! <br><br> ${displayChipCountInfo(
+        outputMessage = `🎉 You won $${
+          2 * currentRoundPlayerBet
+        }! 🎉 <br><br> ${displayChipCountInfo(
           playerChipCount
         )}<br><br>Please place your bets to play again.<br><br>----------<br><br>${displayPlayerAndDealerHands(
           playerHand,
-          dealerHand
-        )} <br><br> ${displayHandTotalValues(
+          dealerHand,
+          false
+        )}<br><br> ${displayHandTotalValues(
           playerHandTotalValue,
           dealerHandTotalValue
-        )}<br><br>${babyCelebrateImg}`;
+        )} <br><br> ${babyCelebrateImg}`;
         resetBJ();
         return outputMessage;
       }
@@ -542,15 +597,17 @@ var main = function (input) {
         playerChipCount = 1 * playerChipCount;
         console.log(`player lost, player's chip is`, playerChipCount);
         console.log(`player lost, player bets`, currentRoundPlayerBet);
-        outputMessage = `Dealer wins! <br><br> ${displayChipCountInfo(
+        outputMessage = `Aw Snap! Dealer wins! <br> You lost $${currentRoundPlayerBet} <br><br> ${displayChipCountInfo(
           playerChipCount
         )}<br><br>Please place your bets to play again.<br><br>----------<br>${displayPlayerAndDealerHands(
           playerHand,
-          dealerHand
+          dealerHand,
+          false
         )} <br><br> ${displayHandTotalValues(
           playerHandTotalValue,
           dealerHandTotalValue
-        )} <br><br>${laughImg}`;
+        )}<br><br> ${atLeastYouTriedImg}`;
+
         resetBJ();
         return outputMessage;
       }
